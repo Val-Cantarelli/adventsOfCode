@@ -1,5 +1,4 @@
-package src;
-
+package ac2022;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;

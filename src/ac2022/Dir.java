@@ -1,9 +1,10 @@
-package src;
+package ac2022;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dir extends DirFile{
+public class Dir extends DirFile {
 
     public Integer currentSize;
 
