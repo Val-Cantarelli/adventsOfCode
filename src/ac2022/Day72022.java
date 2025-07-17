@@ -1,8 +1,8 @@
 package ac2022;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Stack;
 
 /* Incremental solution:
  * The initial idea was to use a tree, but it would be cumbersome to retrieve and update a node.
@@ -12,42 +12,71 @@ import java.util.Stack;
  */
 
 
-
 public class Day72022 {
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); // abre leitura
-        Dir rootDir= new Dir("/");
-        Stack<String> currentPath = new Stack<>();// declara a pilha do path vazia
+        Scanner scanner = new Scanner(System.in);
+        // Onde os diretorios ficarão
         Map<String, Dir> content = new HashMap<>();
-        Dir currentDir = null;
+
+        // Dir /: cria e adiciona no mapa porque nao tem ls de "/"
+        Dir rootDir = new Dir("/");
         content.put("/", rootDir);
+        Dir currentDir = null; // currentDir vai atualizar no cd /
+        String currentPath = "";
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            String [] lineS = line.split(" ");
+            String[] lineS = line.split(" ");
+            if (line.charAt(0) == '$') {
+                if (lineS[1].equals("cd")) {
+                    //$ cd ..
+                    if (lineS[2].equals("..")) {
+                        int li = currentPath.substring(0, currentPath.length() - 1).lastIndexOf("/");
+                        currentPath = currentPath.substring(0, li + 1);
+                    }
+                    // $ cd /
+                    else if (lineS[2].equals("/")) {
+                        currentPath = "/";
+                    }
+                    // $ cd x
+                    else {
+                        currentPath = currentPath + lineS[2] + "/";
+                    }
+                    currentDir = content.get(currentPath);
+                    if (currentDir == null) {
+                        System.err.println(currentPath);
+                        throw new RuntimeException("error");
+                    }
+                } else if (lineS[1].equals("ls")) {
+                    continue;
+                }
+            } else {
+                // ls
+                if (lineS[0].equals("dir")) {
+                    // Extrai nome, cria Dir e adiciona no map e no currentDir
+                    Dir dir = new Dir(lineS[1]);
+                    currentDir.list.add(dir);
+                    String newDirPath = currentPath + lineS[1] + "/";
+                    System.out.println("adding " + newDirPath);
+                    content.put(currentPath + lineS[1] + "/", dir);
+                } else {
+                    // Extrai tamanho, cria arquivo e add no currentDir
+                    int size = Integer.parseInt(lineS[0]);
+                    File file = new File(size);
+                    currentDir.list.add(file);
 
-            if (lineS[1].equals("cd")){
-                currentPath.add(lineS[2]);
-                currentDir = content.get(currentPath.toString());
-                // ..
+                }
             }
-            if (lineS[0].equals("dir")){
-
-                Dir dir = new Dir(lineS[1]);
-                currentDir.list.add(dir);
-                currentPath.add(lineS[1]);
-                content.put(String.valueOf(currentPath),dir);
-
-            }
-            // if file: cria file e adiciona no currentDir
-
-            System.out.println(
-                    content.values().stream()
-                            .filter( dir -> dir.size() <= 100000)
-                            .mapToInt(dir -> dir.size())
-                            .sum()
-            );
         }
         scanner.close();
+
+        System.out.println(
+                content.values().stream()
+                        .filter(dir -> dir.size() <= 100000)
+                        .mapToInt(Dir::size)
+                        .sum()
+        );
+
     }
 }

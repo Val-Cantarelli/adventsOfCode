@@ -4,8 +4,10 @@ package ac2022;
 public class File extends  DirFile{
     public final int size;
 
-    public File(int size, String name) {
-        super(name);
+
+
+    public File(int size) {
+        super();
         this.size = size;
     }
 
