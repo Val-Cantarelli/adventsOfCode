@@ -16,13 +16,12 @@ public class Day72022 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        // Onde os diretorios ficarão
+
         Map<String, Dir> content = new HashMap<>();
 
-        // Dir /: cria e adiciona no mapa porque nao tem ls de "/"
         Dir rootDir = new Dir("/");
         content.put("/", rootDir);
-        Dir currentDir = null; // currentDir vai atualizar no cd /
+        Dir currentDir = null;
         String currentPath = "";
 
         while (scanner.hasNextLine()) {
@@ -61,7 +60,6 @@ public class Day72022 {
                     System.out.println("adding " + newDirPath);
                     content.put(currentPath + lineS[1] + "/", dir);
                 } else {
-                    // Extrai tamanho, cria arquivo e add no currentDir
                     int size = Integer.parseInt(lineS[0]);
                     File file = new File(size);
                     currentDir.list.add(file);
