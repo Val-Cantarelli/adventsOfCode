@@ -80,7 +80,6 @@ public class Day82022Part2 {
                     if (grid[k][j] >= treeValue) break;
                 }
 
-
                 partialResult = (countRight * countBottom * countLeft * countTop);
                 if (partialResult > maxScore) maxScore = partialResult;
                 partialResult = 0;
@@ -88,6 +87,4 @@ public class Day82022Part2 {
         }
         System.out.println(maxScore);
     }
-
-
 }
